@@ -29,7 +29,7 @@ export const PiratskipSprite = () => {
 
         angleRef.current += 0.05 * ticker.deltaTime;
 
-        const radius = 150; // Distance from center
+        const radius = 150;
         const centerX = app.screen.width / 2;
         const centerY = app.screen.height / 2;
 
