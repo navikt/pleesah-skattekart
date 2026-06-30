@@ -28,11 +28,11 @@ jobs:
         with:
           node-version: "24.x"
 
-#      - name: Check changed files
-#        id: changed-files
-#        uses: "nais/what-changed@main"
-#        with:
-#          files: .nais/app.yaml
+      - name: Check changed files
+        id: changed-files
+        uses: "nais/what-changed@main"
+        with:
+          files: .nais/app.yaml
 
       - name: Pnpm install
         run: pnpm install
@@ -47,9 +47,9 @@ jobs:
         with:
           team: leesah
 
-      - name: Deploy to Nais
+      - name: Deploy to dev-gcp
         uses: nais/deploy/actions/deploy@v2
         env:
-          CLUSTER: prod-gcp
+          CLUSTER: dev-gcp
           RESOURCE: .nais/app.yaml
           WORKLOAD_IMAGE: ${{ steps.docker-build-push.outputs.image }}
