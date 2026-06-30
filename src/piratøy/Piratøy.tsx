@@ -22,7 +22,7 @@ export const Piratøy = () => {
         }
     }, [texture]);
 
-    useTick((ticker) => {
+    useTick(() => {
         if (!spriteRef.current) return;
 
         const centerX = app.screen.width / 2;
