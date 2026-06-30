@@ -28,11 +28,11 @@ jobs:
         with:
           node-version: "24.x"
 
-      - name: Check changed files
-        id: changed-files
-        uses: "nais/what-changed@main"
-        with:
-          files: .nais/app.yaml
+#      - name: Check changed files
+#        id: changed-files
+#        uses: "nais/what-changed@main"
+#        with:
+#          files: .nais/app.yaml
 
       - name: Pnpm install
         run: pnpm install
