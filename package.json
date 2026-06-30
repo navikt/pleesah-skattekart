@@ -4,9 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "start": "npm run dev",
+    "start": "pnpm run dev",
     "dev": "vite",
-    "build": "npm run lint && tsc -b && vite build",
+    "build": "tsc -b && vite build",
     "lint": "eslint pleesah-skattekart"
   },
   "dependencies": {
