@@ -8,15 +8,13 @@ dotenv.config();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const basePath = "";
-
 const app = express();
 
 const buildPath = path.join(path.resolve(__dirname, "./dist"));
 
-app.use(basePath, express.static(buildPath, { index: false }));
+app.use("", express.static(buildPath, { index: false }));
 
-app.get(`${basePath}/isAlive|${basePath}/isReady`, (req, res) => {
+app.get(`isAlive|isReady`, (req, res) => {
     res.send("OK");
 });
 
