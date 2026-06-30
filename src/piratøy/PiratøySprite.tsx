@@ -1,4 +1,4 @@
-import { extend, useApplication, useTick } from "@pixi/react";
+import { extend } from "@pixi/react";
 import { Assets, Sprite, Texture } from "pixi.js";
 import { useEffect, useRef, useState } from "react";
 
@@ -6,9 +6,12 @@ extend({
     Sprite,
 });
 
-export const Piratøy = () => {
+interface Props {
+    x: number
+    y: number
+}
 
-    const { app } = useApplication();
+export const PiratøySprite = ({ x, y }: Props) => {
 
     const spriteRef = useRef<Sprite>(null);
 
@@ -22,20 +25,13 @@ export const Piratøy = () => {
         }
     }, [texture]);
 
-    useTick(() => {
-        if (!spriteRef.current) return;
-
-        const centerX = app.screen.width / 2;
-        const centerY = app.screen.height / 2;
-
-        spriteRef.current.x = centerX
-        spriteRef.current.y = centerY
-    })
-
     return <pixiSprite
         ref={spriteRef}
         texture={texture}
         anchor={0.5}
+        x={x}
+        y={y}
+        scale={1.5}
     />
 
 }
