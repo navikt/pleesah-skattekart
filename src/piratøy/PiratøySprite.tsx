@@ -7,12 +7,11 @@ extend({
 });
 
 interface Props {
-    x: number
-    y: number
+    x: number;
+    y: number;
 }
 
 export const PiratøySprite = ({ x, y }: Props) => {
-
     const spriteRef = useRef<Sprite>(null);
 
     const [texture, setTexture] = useState(Texture.EMPTY);
@@ -25,13 +24,5 @@ export const PiratøySprite = ({ x, y }: Props) => {
         }
     }, [texture]);
 
-    return <pixiSprite
-        ref={spriteRef}
-        texture={texture}
-        anchor={0.5}
-        x={x}
-        y={y}
-        scale={1.5}
-    />
-
-}
+    return <pixiSprite ref={spriteRef} texture={texture} anchor={0.5} x={x} y={y} scale={1.5} />;
+};

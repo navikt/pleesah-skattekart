@@ -1,12 +1,10 @@
-import {Application} from "@pixi/react";
-import {PiratskipOgPiratøyScene} from "./piratskipOgPiratøy/PiratskipOgPiratøyScene.tsx";
+import { Application } from "@pixi/react";
+import { SceneManager } from "./SceneManager.tsx";
 
 export default function App() {
-
-
     return (
         <Application background={"#0077BE"} resizeTo={window}>
-            <PiratskipOgPiratøyScene />
+            <SceneManager />
         </Application>
-  );
+    );
 }

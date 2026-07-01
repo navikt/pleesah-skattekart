@@ -1,20 +1,19 @@
-import {PiratøySprite} from "../piratøy/PiratøySprite.tsx";
-import {useApplication} from "@pixi/react";
-import {PiratskipSprite} from "../piratskip/PiratskipSprite.tsx";
+import { PiratskipSprite } from "../piratskip/PiratskipSprite.tsx";
+import { PiratøySprite } from "../piratøy/PiratøySprite.tsx";
 
-export const PiratskipOgPiratøyScene = () => {
-    const { app } = useApplication()
+export interface PiratskipOgPiratøySceneProps {
+    x: number;
+    y: number;
+}
 
-    const startX = app.screen.width / 2
-    const startY = app.screen.height / 2
+const PIRATSKIP_OFFSET_X = -30;
+const PIRATSKIP_OFFSET_Y = 20;
 
-    const piratSkipOffsetX = -30
-    const piratSkipOffsety = 20
-
+export const PiratskipOgPiratøyScene = ({ x, y }: PiratskipOgPiratøySceneProps) => {
     return (
         <>
-            <PiratøySprite x={startX} y={startY} />
-            <PiratskipSprite x={startX + piratSkipOffsetX} y={startY + piratSkipOffsety} />
+            <PiratøySprite x={x} y={y} />
+            <PiratskipSprite x={x + PIRATSKIP_OFFSET_X} y={y + PIRATSKIP_OFFSET_Y} />
         </>
-    )
-}
+    );
+};

@@ -7,8 +7,8 @@ extend({
 });
 
 interface Props {
-    x: number
-    y: number
+    x: number;
+    y: number;
 }
 
 export const PiratskipSprite = ({ x, y }: Props) => {
@@ -24,12 +24,5 @@ export const PiratskipSprite = ({ x, y }: Props) => {
         }
     }, [texture]);
 
-    return <pixiSprite
-        ref={spriteRef}
-        texture={texture}
-        anchor={0.5}
-        scale={0.75}
-        x={x}
-        y={y}
-    />
-}
+    return <pixiSprite ref={spriteRef} texture={texture} anchor={0.5} scale={0.75} x={x} y={y} />;
+};
