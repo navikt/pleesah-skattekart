@@ -25,7 +25,7 @@ export const SceneManager = () => {
             piratskipDriftRef.current = nyePosisjoner.map((posisjon) => {
                 const initX = posisjon.x + PIRATSKIP_OFFSET_X;
                 const initY = posisjon.y + PIRATSKIP_OFFSET_Y;
-                return lagNyDrift(posisjon.x, posisjon.y, initX, initY);
+                return lagNyDrift(posisjon.x, posisjon.y, initX, initY, app.screen.width, app.screen.height);
             });
 
             setPiratskipPosisjoner(
@@ -57,7 +57,14 @@ export const SceneManager = () => {
                 drift.currentY = bezierKurve(drift.t, drift.startY, drift.controlY, drift.targetY);
                 endret = true;
             } else if (baser[index]) {
-                drifts[index] = lagNyDrift(baser[index].x, baser[index].y, drift.currentX, drift.currentY);
+                drifts[index] = lagNyDrift(
+                    baser[index].x,
+                    baser[index].y,
+                    drift.currentX,
+                    drift.currentY,
+                    app.screen.width,
+                    app.screen.height,
+                );
                 endret = true;
             }
         });
