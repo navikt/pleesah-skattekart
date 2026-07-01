@@ -1,6 +1,6 @@
 import { useApplication, useTick } from "@pixi/react";
 import { useEffect, useRef, useState } from "react";
-import { PIRATSKIP_OFFSET_X, PIRATSKIP_OFFSET_Y } from "./consts.ts";
+import { MAX_TRAIL_POINTS, MIN_TRAIL_DISTANCE, PIRATSKIP_OFFSET_X, PIRATSKIP_OFFSET_Y } from "./consts.ts";
 import { genererScenePosisjoner } from "./piratskipOgPiratøy/genererScenePosisjoner.ts";
 import { PiratskipOgPiratøyScene } from "./piratskipOgPiratøy/PiratskipOgPiratøyScene.tsx";
 import { PiratskipDrift, ScenePosition } from "./types.ts";
@@ -10,9 +10,11 @@ export const SceneManager = () => {
     const { app } = useApplication();
     const [posisjoner, setPosisjoner] = useState<ScenePosition[]>([]);
     const [piratskipPosisjoner, setPiratskipPosisjoner] = useState<ScenePosition[]>([]);
+    const [trails, setTrails] = useState<ScenePosition[][]>([]);
 
     const piratskipDriftRef = useRef<PiratskipDrift[]>([]);
     const posisjonerRef = useRef<ScenePosition[]>([]);
+    const trailsRef = useRef<ScenePosition[][]>([]);
 
     useEffect(() => {
         if (!app) return;
@@ -34,6 +36,11 @@ export const SceneManager = () => {
                     y: posisjon.y + PIRATSKIP_OFFSET_Y,
                 })),
             );
+
+            trailsRef.current = nyePosisjoner.map((posisjon) => [
+                { x: posisjon.x + PIRATSKIP_OFFSET_X, y: posisjon.y + PIRATSKIP_OFFSET_Y },
+            ]);
+            setTrails(trailsRef.current.map((t) => [...t]));
         };
 
         regenerer();
@@ -71,6 +78,30 @@ export const SceneManager = () => {
 
         if (endret) {
             setPiratskipPosisjoner(drifts.map((drift) => ({ x: drift.currentX, y: drift.currentY })));
+
+            let trailEndret = false;
+            drifts.map((drift, index) => {
+                const trail = trailsRef.current[index];
+                if (!trail) return;
+
+                const last = trail[trail.length - 1];
+                const dx = drift.currentX - last.x;
+                const dy = drift.currentY - last.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+
+                if (distance > MIN_TRAIL_DISTANCE) {
+                    trail.push({ x: drift.currentX, y: drift.currentY });
+
+                    if (trail.length > MAX_TRAIL_POINTS) {
+                        trail.shift();
+                    }
+                    trailEndret = true;
+                }
+            });
+
+            if (trailEndret) {
+                setTrails(trailsRef.current.map((t) => [...t]));
+            }
         }
     });
 
@@ -83,6 +114,7 @@ export const SceneManager = () => {
                     startY={posisjon.y}
                     piratskipX={piratskipPosisjoner[index]?.x ?? posisjon.x + PIRATSKIP_OFFSET_X}
                     piratskipY={piratskipPosisjoner[index]?.y ?? posisjon.y + PIRATSKIP_OFFSET_Y}
+                    trail={trails[index] ?? []}
                 />
             ))}
         </>
