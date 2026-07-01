@@ -2,18 +2,17 @@ import { PiratskipSprite } from "../piratskip/PiratskipSprite.tsx";
 import { PiratøySprite } from "../piratøy/PiratøySprite.tsx";
 
 export interface PiratskipOgPiratøySceneProps {
-    x: number;
-    y: number;
+    startX: number;
+    startY: number;
+    piratskipX: number;
+    piratskipY: number;
 }
 
-const PIRATSKIP_OFFSET_X = -30;
-const PIRATSKIP_OFFSET_Y = 20;
-
-export const PiratskipOgPiratøyScene = ({ x, y }: PiratskipOgPiratøySceneProps) => {
+export const PiratskipOgPiratøyScene = ({ startX, startY, piratskipX, piratskipY }: PiratskipOgPiratøySceneProps) => {
     return (
         <>
-            <PiratøySprite x={x} y={y} />
-            <PiratskipSprite x={x + PIRATSKIP_OFFSET_X} y={y + PIRATSKIP_OFFSET_Y} />
+            <PiratøySprite x={startX} y={startY} />
+            <PiratskipSprite x={piratskipX} y={piratskipY} />
         </>
     );
 };

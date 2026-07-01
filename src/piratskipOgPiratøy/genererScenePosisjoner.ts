@@ -1,12 +1,5 @@
 import { ScenePosition } from "../types.ts";
-
-const tilfeldigInnenRekkevidde = (min: number, maks: number) => {
-    return Math.random() * (maks - min) + min;
-};
-
-const regnUtDistanseMellomToPunkter = (a: ScenePosition, b: ScenePosition) => {
-    return Math.hypot(a.x - b.x, a.y - b.y);
-};
+import { regnUtDistanseMellomToPunkter, tilfeldigInnenRekkevidde } from "../utils.ts";
 
 export const genererScenePosisjoner = (
     antall: number,
