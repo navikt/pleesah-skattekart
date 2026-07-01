@@ -1,21 +1,10 @@
 import { useApplication, useTick } from "@pixi/react";
 import { useEffect, useRef, useState } from "react";
+import { PIRATSKIP_OFFSET_X, PIRATSKIP_OFFSET_Y } from "./consts.ts";
 import { genererScenePosisjoner } from "./piratskipOgPiratøy/genererScenePosisjoner.ts";
 import { PiratskipOgPiratøyScene } from "./piratskipOgPiratøy/PiratskipOgPiratøyScene.tsx";
-import { ScenePosition } from "./types.ts";
-import { tilfeldigInnenRekkevidde } from "./utils.ts";
-
-const PIRATSKIP_OFFSET_X = -30;
-const PIRATSKIP_OFFSET_Y = 20;
-const MAX_RANDOM_DRIFT = 45;
-const FOLLOW_SPEED = 0.08;
-
-interface PiratskipDrift {
-    currentX: number;
-    currentY: number;
-    targetX: number;
-    targetY: number;
-}
+import { PiratskipDrift, ScenePosition } from "./types.ts";
+import { bezierKurve, lagNyDrift } from "./utils.ts";
 
 export const SceneManager = () => {
     const { app } = useApplication();
@@ -23,6 +12,7 @@ export const SceneManager = () => {
     const [piratskipPosisjoner, setPiratskipPosisjoner] = useState<ScenePosition[]>([]);
 
     const piratskipDriftRef = useRef<PiratskipDrift[]>([]);
+    const posisjonerRef = useRef<ScenePosition[]>([]);
 
     useEffect(() => {
         if (!app) return;
@@ -30,13 +20,13 @@ export const SceneManager = () => {
         const regenerer = () => {
             const nyePosisjoner = genererScenePosisjoner(5, app.screen.width, app.screen.height, 400, 140, 5);
             setPosisjoner(nyePosisjoner);
+            posisjonerRef.current = nyePosisjoner;
 
-            piratskipDriftRef.current = nyePosisjoner.map((posisjon) => ({
-                currentX: posisjon.x + PIRATSKIP_OFFSET_X,
-                currentY: posisjon.y + PIRATSKIP_OFFSET_Y,
-                targetX: posisjon.x + PIRATSKIP_OFFSET_X,
-                targetY: posisjon.y + PIRATSKIP_OFFSET_Y,
-            }));
+            piratskipDriftRef.current = nyePosisjoner.map((posisjon) => {
+                const initX = posisjon.x + PIRATSKIP_OFFSET_X;
+                const initY = posisjon.y + PIRATSKIP_OFFSET_Y;
+                return lagNyDrift(posisjon.x, posisjon.y, initX, initY);
+            });
 
             setPiratskipPosisjoner(
                 nyePosisjoner.map((posisjon) => ({
@@ -53,45 +43,21 @@ export const SceneManager = () => {
         };
     }, [app]);
 
-    useEffect(() => {
-        if (posisjoner.length === 0) return;
-
-        const timeouts: ReturnType<typeof setTimeout>[] = [];
-
-        const scheduleTarget = (index: number) => {
-            const velg = () => {
-                const base = posisjoner[index];
-
-                if (!base || !piratskipDriftRef.current[index]) return;
-
-                piratskipDriftRef.current[index].targetX =
-                    base.x + PIRATSKIP_OFFSET_X + tilfeldigInnenRekkevidde(-MAX_RANDOM_DRIFT, MAX_RANDOM_DRIFT);
-                piratskipDriftRef.current[index].targetY =
-                    base.y + PIRATSKIP_OFFSET_Y + tilfeldigInnenRekkevidde(-MAX_RANDOM_DRIFT, MAX_RANDOM_DRIFT);
-
-                timeouts[index] = setTimeout(velg, tilfeldigInnenRekkevidde(700, 1800));
-            };
-
-            velg();
-        };
-
-        posisjoner.forEach((_, index) => scheduleTarget(index));
-        return () => timeouts.forEach(clearTimeout);
-    }, [posisjoner]);
-
     useTick(() => {
         const drifts = piratskipDriftRef.current;
+        const baser = posisjonerRef.current;
         if (drifts.length === 0) return;
 
         let endret = false;
 
-        drifts.map((drift) => {
-            const dx = drift.targetX - drift.currentX;
-            const dy = drift.targetY - drift.currentY;
-
-            if (Math.abs(dx) > 0.1 || Math.abs(dy) > 0.1) {
-                drift.currentX += dx * FOLLOW_SPEED;
-                drift.currentY += dy * FOLLOW_SPEED;
+        drifts.map((drift, index) => {
+            if (drift.t < 1) {
+                drift.t = Math.min(drift.t + drift.speed, 1);
+                drift.currentX = bezierKurve(drift.t, drift.startX, drift.controlX, drift.targetX);
+                drift.currentY = bezierKurve(drift.t, drift.startY, drift.controlY, drift.targetY);
+                endret = true;
+            } else if (baser[index]) {
+                drifts[index] = lagNyDrift(baser[index].x, baser[index].y, drift.currentX, drift.currentY);
                 endret = true;
             }
         });
