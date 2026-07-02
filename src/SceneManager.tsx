@@ -11,7 +11,7 @@ import { bezierKurve, lagNyDrift } from "./utils.ts";
 export const SceneManager = () => {
     const { app } = useApplication();
 
-    const { data, error }: SWRResponse<Lag[], boolean> = useSWR("/api/alle-lag", fetcher, { refreshInterval: 1000 });
+    const { data }: SWRResponse<Lag[], boolean> = useSWR("/api/alle-lag", fetcher, { refreshInterval: 1000 });
 
     const [posisjoner, setPosisjoner] = useState<ScenePosition[]>([]);
     const [piratskipPosisjoner, setPiratskipPosisjoner] = useState<ScenePosition[]>([]);

@@ -6,7 +6,7 @@ export const lagMock: Lag[] = [
         navn: "Pelle",
         hexKode: "#FF0000",
         progresjon: [
-            { x: 100, y: 100 },
+            { x: 150, y: 150 },
             { x: 200, y: 200 },
             { x: 300, y: 100 },
         ],
@@ -15,10 +15,15 @@ export const lagMock: Lag[] = [
         navn: "Kari",
         hexKode: "#00FF00",
         progresjon: [
-            { x: 300, y: 300 },
+            { x: 400, y: 400 },
             { x: 250, y: 250 },
             { x: 350, y: 150 },
         ],
+    },
+    {
+        navn: "Ola",
+        hexKode: "#0000FF",
+        progresjon: [],
     },
 ];
 
