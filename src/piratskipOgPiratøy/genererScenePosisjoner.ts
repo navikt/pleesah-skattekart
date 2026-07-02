@@ -1,36 +1,18 @@
-import { ScenePosition } from "../types.ts";
-import { regnUtDistanseMellomToPunkter, tilfeldigInnenRekkevidde } from "../utils.ts";
+import { Lag, ScenePosition } from "../types.ts";
+import { tilfeldigInnenRekkevidde } from "../utils.ts";
 
-export const genererScenePosisjoner = (
-    antall: number,
-    bredde: number,
-    høyde: number,
-    minimumDistanseMellomPunkter: number,
-    margin: number,
-    maksForsøk: number,
-): ScenePosition[] => {
-    const posisjoner: ScenePosition[] = [];
-    const forsøk = 0;
+// TODO: Hvis progresjon liste fra backend er tom, finn et sted å plasser første posisjon for øya og post kordinatene til backend
 
-    while (posisjoner.length < antall && forsøk < maksForsøk) {
-        const kandidat: ScenePosition = {
+export const genererScenePosisjoner = (lag: Lag[], bredde: number, høyde: number, margin: number): ScenePosition[] => {
+    return lag.map((l) => {
+        const førstePosisjon = l.progresjon[0] ?? {
             x: tilfeldigInnenRekkevidde(margin, bredde - margin),
             y: tilfeldigInnenRekkevidde(margin, høyde - margin),
         };
 
-        const overlapper = posisjoner.some(
-            (eksisterende) => regnUtDistanseMellomToPunkter(kandidat, eksisterende) < minimumDistanseMellomPunkter,
-        );
-
-        if (!overlapper) posisjoner.push(kandidat);
-    }
-
-    while (posisjoner.length < antall) {
-        posisjoner.push({
-            x: tilfeldigInnenRekkevidde(margin, bredde - margin),
-            y: tilfeldigInnenRekkevidde(margin, høyde - margin),
-        });
-    }
-
-    return posisjoner;
+        return {
+            x: Math.min(Math.max(førstePosisjon.x, margin), bredde - margin),
+            y: Math.min(Math.max(førstePosisjon.y, margin), høyde - margin),
+        };
+    });
 };

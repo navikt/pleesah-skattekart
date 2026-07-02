@@ -1,13 +1,18 @@
 import { useApplication, useTick } from "@pixi/react";
 import { useEffect, useRef, useState } from "react";
+import useSWR, { SWRResponse } from "swr";
 import { MAX_TRAIL_POINTS, MIN_TRAIL_DISTANCE, PIRATSKIP_OFFSET_X, PIRATSKIP_OFFSET_Y } from "./consts.ts";
+import { fetcher } from "./fetcher.ts";
 import { genererScenePosisjoner } from "./piratskipOgPiratøy/genererScenePosisjoner.ts";
 import { PiratskipOgPiratøyScene } from "./piratskipOgPiratøy/PiratskipOgPiratøyScene.tsx";
-import { PiratskipDrift, ScenePosition } from "./types.ts";
+import { Lag, PiratskipDrift, ScenePosition } from "./types.ts";
 import { bezierKurve, lagNyDrift } from "./utils.ts";
 
 export const SceneManager = () => {
     const { app } = useApplication();
+
+    const { data, error }: SWRResponse<Lag[], boolean> = useSWR("/api/alle-lag", fetcher, { refreshInterval: 1000 });
+
     const [posisjoner, setPosisjoner] = useState<ScenePosition[]>([]);
     const [piratskipPosisjoner, setPiratskipPosisjoner] = useState<ScenePosition[]>([]);
     const [trails, setTrails] = useState<ScenePosition[][]>([]);
@@ -16,11 +21,12 @@ export const SceneManager = () => {
     const posisjonerRef = useRef<ScenePosition[]>([]);
     const trailsRef = useRef<ScenePosition[][]>([]);
 
+    // TODO: Hvis progresjon liste fra backend er tom, finn et sted å plasser første posisjon for øya og post kordinatene til backend
     useEffect(() => {
         if (!app) return;
 
         const regenerer = () => {
-            const nyePosisjoner = genererScenePosisjoner(5, app.screen.width, app.screen.height, 400, 140, 5);
+            const nyePosisjoner = genererScenePosisjoner(data ?? [], app.screen.width, app.screen.height, 50);
             setPosisjoner(nyePosisjoner);
             posisjonerRef.current = nyePosisjoner;
 
@@ -48,7 +54,7 @@ export const SceneManager = () => {
         return () => {
             window.removeEventListener("resize", regenerer);
         };
-    }, [app]);
+    }, [app, data]);
 
     useTick(() => {
         const drifts = piratskipDriftRef.current;
