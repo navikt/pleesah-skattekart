@@ -9,7 +9,7 @@ import { Lag, PiratskipDrift, ScenePosition } from "./types.ts";
 import { bezierKurve, lagNyDrift } from "./utils.ts";
 
 const parseProgresjon = (progresjon: string[]): ScenePosition[] => {
-    return progresjon.map((s) => {
+    return (progresjon ?? []).map((s) => {
         const [x, y] = s.split(",").map(Number);
         return { x, y };
     });
