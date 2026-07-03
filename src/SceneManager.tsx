@@ -8,10 +8,26 @@ import { PiratskipOgPiratøyScene } from "./piratskipOgPiratøy/PiratskipOgPirat
 import { Lag, PiratskipDrift, ScenePosition } from "./types.ts";
 import { bezierKurve, lagNyDrift } from "./utils.ts";
 
+const parseProgresjon = (progresjon: string[]): ScenePosition[] => {
+    return progresjon.map((s) => {
+        const [x, y] = s.split(",").map(Number);
+        return { x, y };
+    });
+};
+
 export const SceneManager = () => {
     const { app } = useApplication();
 
-    const { data }: SWRResponse<Lag[], boolean> = useSWR("/api/v1/teams", fetcher, { refreshInterval: 1000 });
+    const { data: råData }: SWRResponse<{ navn: string; hexKode: string; progresjon: string[] }[], boolean> = useSWR(
+        "/api/v1/teams",
+        fetcher,
+        { refreshInterval: 1000 },
+    );
+
+    const data: Lag[] | undefined = råData?.map((l) => ({
+        ...l,
+        progresjon: parseProgresjon(l.progresjon),
+    }));
 
     const [posisjoner, setPosisjoner] = useState<ScenePosition[]>([]);
     const [piratskipPosisjoner, setPiratskipPosisjoner] = useState<ScenePosition[]>([]);
@@ -121,6 +137,8 @@ export const SceneManager = () => {
                     piratskipX={piratskipPosisjoner[index]?.x ?? posisjon.x + PIRATSKIP_OFFSET_X}
                     piratskipY={piratskipPosisjoner[index]?.y ?? posisjon.y + PIRATSKIP_OFFSET_Y}
                     trail={trails[index] ?? []}
+                    navn={data?.[index]?.navn ?? ""}
+                    hexKode={data?.[index]?.hexKode ?? "#ffffff"}
                 />
             ))}
         </>

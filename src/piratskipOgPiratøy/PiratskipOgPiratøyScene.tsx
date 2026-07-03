@@ -9,6 +9,8 @@ export interface PiratskipOgPiratøySceneProps {
     piratskipX: number;
     piratskipY: number;
     trail: ScenePosition[];
+    navn: string;
+    hexKode: string;
 }
 
 export const PiratskipOgPiratøyScene = ({
@@ -17,11 +19,13 @@ export const PiratskipOgPiratøyScene = ({
     piratskipX,
     piratskipY,
     trail,
+    navn,
+    hexKode,
 }: PiratskipOgPiratøySceneProps) => {
     return (
         <>
             <PiratskipTrail trail={trail} />
-            <PiratøySprite x={startX} y={startY} />
+            <PiratøySprite x={startX} y={startY} navn={navn} hexKode={hexKode} />
             <PiratskipSprite x={piratskipX} y={piratskipY} />
         </>
     );
