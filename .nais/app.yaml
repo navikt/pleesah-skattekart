@@ -13,3 +13,10 @@ spec:
     requests:
       cpu: "10m"
       memory: 128Mi
+  env:
+    - name: VITE_API_URL
+      value: http://pleesah-havnesjef
+  accessPolicy:
+    outbound:
+      rules:
+        - application: pleesah-havnesjef
