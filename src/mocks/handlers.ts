@@ -33,6 +33,6 @@ export const handlers = [
     }),
     http.post("/api/v1/team/:lagnavn/progression", async ({ request }) => {
         const body = await request.json();
-        return HttpResponse.json(null, { status: 200 });
+        return HttpResponse.json(body, { status: 200 });
     }),
 ];
