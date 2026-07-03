@@ -31,7 +31,7 @@ export const handlers = [
     http.get("/api/alle-lag", () => {
         return HttpResponse.json(lagMock);
     }),
-    http.post("/api/lag/{lag}/progresjon", () => {
+    http.post("/api/lag/:lagnavn/progresjon", () => {
         return HttpResponse.json(null, { status: 200 });
     }),
 ];

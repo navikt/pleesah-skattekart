@@ -6,6 +6,16 @@ const SPRITE_BUFFER = 100;
 const MIN_AVSTAND = 200;
 const MAX_FORSØK = 100;
 
+export const lagreFørstePosisjon = async (lagnavn: string, førstePosisjon: ScenePosition) => {
+    await fetch(`/api/lag/${lagnavn}/progresjon`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(førstePosisjon),
+    });
+};
+
 // TODO: Hvis progresjon liste fra backend er tom, finn et sted å plasser første posisjon for øya og post kordinatene til backend
 export const genererScenePosisjoner = (lag: Lag[], bredde: number, høyde: number, margin: number): ScenePosition[] => {
     // Safe bounds: margin + sprite visual extent + ship offset per edge
@@ -22,7 +32,7 @@ export const genererScenePosisjoner = (lag: Lag[], bredde: number, høyde: numbe
 
     const posisjoner: ScenePosition[] = [];
 
-    lag.map((l) => {
+    lag.map(async (l) => {
         const førstePosisjon = l.progresjon[0];
 
         if (førstePosisjon) {
@@ -51,6 +61,7 @@ export const genererScenePosisjoner = (lag: Lag[], bredde: number, høyde: numbe
             }
 
             posisjoner.push(bestePosisjon);
+            await lagreFørstePosisjon(l.navn, førstePosisjon);
         }
     });
 
