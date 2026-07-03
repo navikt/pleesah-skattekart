@@ -1,5 +1,5 @@
 import { useApplication, useTick } from "@pixi/react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import useSWR, { SWRResponse } from "swr";
 import { MAX_TRAIL_POINTS, MIN_TRAIL_DISTANCE, PIRATSKIP_OFFSET_X, PIRATSKIP_OFFSET_Y } from "./consts.ts";
 import { fetcher } from "./fetcher.ts";
@@ -24,10 +24,14 @@ export const SceneManager = () => {
         { refreshInterval: 1000 },
     );
 
-    const data: Lag[] | undefined = råData?.map((l) => ({
-        ...l,
-        progresjon: parseProgresjon(l.progresjon),
-    }));
+    const data: Lag[] | undefined = useMemo(
+        () =>
+            råData?.map((l) => ({
+                ...l,
+                progresjon: parseProgresjon(l.progresjon),
+            })),
+        [råData],
+    );
 
     const [posisjoner, setPosisjoner] = useState<ScenePosition[]>([]);
     const [piratskipPosisjoner, setPiratskipPosisjoner] = useState<ScenePosition[]>([]);
