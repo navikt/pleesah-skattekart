@@ -20,7 +20,6 @@ app.get(`isAlive|isReady`, (req, res) => {
 });
 
 app.use(
-    "/api",
     createProxyMiddleware({
         target: `${process.env.VITE_API_URL}`,
         changeOrigin: true,
