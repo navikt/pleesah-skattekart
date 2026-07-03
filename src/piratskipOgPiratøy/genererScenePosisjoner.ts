@@ -7,7 +7,7 @@ const MIN_AVSTAND = 200;
 const MAX_FORSØK = 100;
 
 export const lagreFørstePosisjon = async (lagnavn: string, førstePosisjon: ScenePosition) => {
-    await fetch(`/api/lag/${lagnavn}/progresjon`, {
+    await fetch(`/api/v1/team/${lagnavn}/progression`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
