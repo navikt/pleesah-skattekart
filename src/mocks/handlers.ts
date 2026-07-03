@@ -28,10 +28,11 @@ export const lagMock: Lag[] = [
 ];
 
 export const handlers = [
-    http.get("/api/alle-lag", () => {
+    http.get("/api/v1/teams", () => {
         return HttpResponse.json(lagMock);
     }),
-    http.post("/api/lag/:lagnavn/progresjon", () => {
+    http.post("/api/v1/team/:lagnavn/progression", async ({ request }) => {
+        const body = await request.json();
         return HttpResponse.json(null, { status: 200 });
     }),
 ];

@@ -61,7 +61,7 @@ export const genererScenePosisjoner = (lag: Lag[], bredde: number, høyde: numbe
             }
 
             posisjoner.push(bestePosisjon);
-            await lagreFørstePosisjon(l.navn, førstePosisjon);
+            await lagreFørstePosisjon(l.navn, bestePosisjon);
         }
     });
 
