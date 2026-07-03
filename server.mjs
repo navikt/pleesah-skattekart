@@ -24,7 +24,7 @@ app.use(
     createProxyMiddleware({
         target: `${process.env.VITE_API_URL}`,
         changeOrigin: true,
-        pathRewrite: { [`^/api`]: "" },
+        pathFilter: "/api",
     }),
 );
 
