@@ -47,9 +47,9 @@ jobs:
         with:
           team: leesah
 
-      - name: Deploy to dev-gcp
+      - name: Deploy to prod-gcp
         uses: nais/deploy/actions/deploy@v2
         env:
-          CLUSTER: dev-gcp
+          CLUSTER: prod-gcp
           RESOURCE: .nais/app.yaml
           WORKLOAD_IMAGE: ${{ steps.docker-build-push.outputs.image }}

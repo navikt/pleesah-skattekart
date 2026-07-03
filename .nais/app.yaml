@@ -6,7 +6,7 @@ metadata:
 spec:
   port: 3000
   ingresses:
-    - "https://pleesah-skattekart.ansatt.dev.nav.no"
+    - "https://pleesah-skattekart.ansatt.nav.no"
   resources:
     limits:
       memory: 768Mi
