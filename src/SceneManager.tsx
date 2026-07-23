@@ -19,7 +19,7 @@ export const SceneManager = () => {
     const { app } = useApplication();
 
     const { data: råData }: SWRResponse<{ navn: string; hexKode: string; progresjon: string[] }[], boolean> = useSWR(
-        "/api/v1/teams",
+        "/teams",
         fetcher,
         { refreshInterval: 1000 },
     );
